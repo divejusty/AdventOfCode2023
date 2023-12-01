@@ -1,0 +1,16 @@
+{
+    "name": "divejusty/aoc2023",
+    "autoload": {
+        "psr-4": {
+            "AoC2023\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Justin Wies"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    }
+}
