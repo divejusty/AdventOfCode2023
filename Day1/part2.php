@@ -2,7 +2,7 @@
 
 require_once '../utils.php';
 
-class NumberPostion {
+class NumberPosition {
     public function __construct(public readonly int $position, public readonly string $value) {}
 }
 
@@ -25,7 +25,7 @@ function findTextNumbers(string $line): array {
             $pos = strpos($line, $key, $pos);
 
             if($pos !== false) {
-                $results[] = new NumberPostion($pos, $val);
+                $results[] = new NumberPosition($pos, $val);
                 $pos++;
             }
         } while ($pos !== false);
@@ -38,14 +38,14 @@ function findDigitNumbers(string $line): array {
     $results = [];
     for($i = 0; $i < strlen($line); $i++) {
         if(is_numeric($line[$i])) {
-            $results[] = new NumberPostion($i, $line[$i]);
+            $results[] = new NumberPosition($i, $line[$i]);
         }
     }
     return $results;
 }
 
-$firstNumber = fn($str) => array_reduce(array_merge(findTextNumbers($str), findDigitNumbers($str)), fn (?NumberPostion $carry, NumberPostion $item) => $carry && ($carry->position < $item->position) ? $carry : $item)->value;
-$lastNumber = fn($str) => array_reduce(array_merge(findTextNumbers($str), findDigitNumbers($str)), fn (?NumberPostion $carry, NumberPostion $item) => $carry && ($carry->position > $item->position) ? $carry : $item)->value;
+$firstNumber = fn($str) => array_reduce(array_merge(findTextNumbers($str), findDigitNumbers($str)), fn (?NumberPosition $carry, NumberPosition $item) => $carry && ($carry->position < $item->position) ? $carry : $item)->value;
+$lastNumber = fn($str) => array_reduce(array_merge(findTextNumbers($str), findDigitNumbers($str)), fn (?NumberPosition $carry, NumberPosition $item) => $carry && ($carry->position > $item->position) ? $carry : $item)->value;
 $combinedNumberInLine = fn($line): int => (int) ($firstNumber($line).$lastNumber($line));
 
 $input = 'input.txt';
