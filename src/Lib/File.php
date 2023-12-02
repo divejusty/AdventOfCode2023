@@ -13,6 +13,11 @@ final class File
         fclose($file);
     }
 
+    public static function read($fileName): string
+    {
+        return file_get_contents($fileName);
+    }
+
     public static function inputFile($fileName): string
     {
         return __DIR__ . '/../../Input/' . $fileName;
