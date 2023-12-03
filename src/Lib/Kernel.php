@@ -5,19 +5,32 @@ namespace AoC2023\Lib;
 final class Kernel
 {
     private array $routes = [];
-    private bool $running;
+    private bool $continuous;
     private ?string $command;
 
     public function __construct()
     {
         $this->readOpts();
+        $this->showHeader();
+
     }
 
     private function readOpts(): void
     {
-        $opts = getopt('r::c');
-        $this->running = isset($opts['c']);
-        $this->command = $opts['r'] ?? null;
+        $opts = getopt('r::ch', ['run::', 'continuous', 'help']);
+        $this->continuous = isset($opts['c']) || isset($opts['continuous']);
+        $this->command = $opts['r'] ?? $opts['run'] ?? null;
+        if(isset($opts['h']) || isset($opts['help'])) {
+            $this->command = 'list';
+        }
+    }
+
+    private function showHeader(): void
+    {
+        IO::write('Welcome to the Advent of Code 2023');
+        if($this->continuous) {
+            IO::write("Programme running in continuous mode\n\n");
+        }
     }
 
     private function runAssignment(string $task = null): void
@@ -42,10 +55,16 @@ final class Kernel
 
     private function list(): void
     {
-        IO::write('Available tasks:');
+        IO::write('+--- General commands: ------------------');
+        IO::write('| help: display this message');
+        IO::write('| exit: quit the application');
+        IO::write('| run: get prompted for a task to run');
+        IO::write('|      (tasks can also be ran directly)');
+        IO::write('+--- Available tasks: -------------------');
         foreach ($this->routes as $route => $action) {
-            IO::write($action::$name . ': ' . $route);
+            IO::write('|   ' . $action::$name . ':  ' . $route);
         }
+        IO::write('+----------------------------------------');
     }
 
     private function readCommand(): string
@@ -62,25 +81,28 @@ final class Kernel
 
     public function run(): void
     {
-        IO::write('Welcome to the Advent of Code 2023');
         do {
             $command = $this->readCommand();
             switch ($command) {
                 case 'exit':
                 case 'quit':
-                case 'q':
+                case ':e':
                 case ':q':
-                    $this->running = false;
+                    $this->continuous = false;
                     break;
                 case 'list':
+                case 'help':
+                case ':l':
+                case ':h':
                     $this->list();
                     break;
                 case 'run':
+                case ':r':
                     $this->runAssignment();
                     break;
                 default:
                     self::runAssignment($command);
             }
-        } while ($this->running);
+        } while ($this->continuous);
     }
 }
