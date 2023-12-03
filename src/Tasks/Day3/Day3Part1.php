@@ -9,6 +9,8 @@ use AoC2023\Lib\IO;
 
 class Day3Part1 extends BaseTask
 {
+    public static string $name = "Day 3 Part 1";
+
     public function run(): void
     {
         // Training 1: 4361

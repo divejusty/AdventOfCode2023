@@ -7,6 +7,8 @@ use AoC2023\Lib\IO;
 
 class Day1Part1 extends \AoC2023\Lib\BaseTask
 {
+    public static string $name = "Day 1 Part 1";
+
     private function findFirstNumber($str) {
         for($i = 0; $i < strlen($str); $i++) {
             if(is_numeric($str[$i])) {

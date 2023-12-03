@@ -5,6 +5,20 @@ namespace AoC2023\Lib;
 final class Kernel
 {
     private array $routes = [];
+    private bool $running;
+    private ?string $command;
+
+    public function __construct()
+    {
+        $this->readOpts();
+    }
+
+    private function readOpts(): void
+    {
+        $opts = getopt('r::c');
+        $this->running = isset($opts['c']);
+        $this->command = $opts['r'] ?? null;
+    }
 
     private function runAssignment(string $task = null): void
     {
@@ -18,7 +32,7 @@ final class Kernel
             return;
         }
 
-        (new $this->routes[$task]())->run();
+        (new $this->routes[$task]())->execute();
     }
 
     public function register(string $route, string $action): void
@@ -30,22 +44,33 @@ final class Kernel
     {
         IO::write('Available tasks:');
         foreach ($this->routes as $route => $action) {
-            IO::write($route);
+            IO::write($action::$name . ': ' . $route);
         }
+    }
+
+    private function readCommand(): string
+    {
+        if (!is_null($this->command)) {
+            $command = $this->command;
+            $this->command = null;
+
+            return $command;
+        }
+        IO::write('Please enter what command you want to run');
+        return IO::read();
     }
 
     public function run(): void
     {
-        $running = true;
-        while ($running) {
-            IO::write('Welcome to the Advent of Code 2023, please enter a command (list, exit)');
-            $command = IO::read();
+        IO::write('Welcome to the Advent of Code 2023');
+        do {
+            $command = $this->readCommand();
             switch ($command) {
                 case 'exit':
                 case 'quit':
                 case 'q':
                 case ':q':
-                    $running = false;
+                    $this->running = false;
                     break;
                 case 'list':
                     $this->list();
@@ -56,6 +81,6 @@ final class Kernel
                 default:
                     self::runAssignment($command);
             }
-        }
+        } while ($this->running);
     }
 }

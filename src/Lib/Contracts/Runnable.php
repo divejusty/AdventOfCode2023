@@ -2,7 +2,8 @@
 
 namespace AoC2023\Lib\Contracts;
 
-interface Runable
+interface Runnable
 {
     public function run(): void;
+    public function execute(): void;
 }

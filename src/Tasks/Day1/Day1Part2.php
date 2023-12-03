@@ -9,6 +9,8 @@ use AoC2023\Lib\IO;
 
 class Day1Part2 extends BaseTask
 {
+    public static string $name = "Day 1 Part 2";
+
     public function run(): void
     {
         $input = File::inputFile('Day1/input.txt'); // 54078
